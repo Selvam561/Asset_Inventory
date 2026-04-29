@@ -8,10 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:         #0f1a17;
-  --surface:    #131f1b;
-  --s2:         #182723;
-  --s3:         #1f2f2a;
+  --bg:         #080808;
+  --surface:    #111111;
+  --s2:         #181818;
+  --s3:         #202020;
   --s4:         #2a2a2a;
   --border:     #222222;
   --border2:    #333333;
@@ -536,6 +536,48 @@ footer { padding: 16px 28px; display: flex; align-items: center; justify-content
 #toast.error   { border-color: rgba(248,113,113,0.35); color: var(--red); }
 #toast.info    { border-color: rgba(255,255,255,0.2); color: var(--white); }
 
+/* ════════════════════════════════════════
+   TABS & INSTALLED APPS
+════════════════════════════════════════ */
+.section-tabs { display:flex; align-items:center; gap:0; border-bottom:1px solid var(--border2); margin:0 28px; }
+.tab-btn { padding:10px 20px; background:none; border:none; border-bottom:2px solid transparent; color:var(--muted); font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all 0.18s; margin-bottom:-1px; }
+.tab-btn:hover { color:var(--white); }
+.tab-btn.active { color:var(--white); border-bottom-color:var(--white); }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+.app-kpi-strip { display:grid; grid-template-columns:repeat(auto-fit, minmax(130px,1fr)); gap:10px; margin:14px 28px; }
+.app-kpi { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 16px; }
+.app-kpi-label { font-family:var(--mono); font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.app-kpi-val { font-family:var(--mono); font-size:22px; font-weight:700; color:var(--white); line-height:1; }
+
+.apps-toolbar { display:flex; align-items:center; justify-content:space-between; padding:0 28px 12px; gap:10px; flex-wrap:wrap; }
+
+.app-changes-wrap { margin:0 28px; background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden; min-height:200px; max-height:calc(100vh - 400px); overflow-y:auto; }
+.app-change-item { display:grid; grid-template-columns:150px 85px 1fr auto; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+.app-change-item:last-child { border-bottom:none; }
+.app-change-item:hover { background:var(--white-05); }
+.app-change-pc { font-family:var(--mono); font-size:11px; font-weight:700; color:var(--white); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.app-change-type { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:20px; font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:0.5px; white-space:nowrap; }
+.app-type-added { background:var(--green-dim); border:1px solid rgba(74,222,128,0.2); color:var(--green); }
+.app-type-removed { background:var(--red-dim); border:1px solid rgba(248,113,113,0.2); color:var(--red); }
+.app-change-name { font-family:var(--mono); font-size:11px; color:var(--white-90); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.app-change-time { font-family:var(--mono); font-size:10px; color:var(--muted); white-space:nowrap; }
+
+.apps-pc-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; margin-bottom:10px; overflow:hidden; }
+.apps-pc-header { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; cursor:pointer; background:var(--s2); border-bottom:1px solid var(--border); transition:background 0.15s; user-select:none; }
+.apps-pc-header:hover { background:var(--s3); }
+.apps-pc-name { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--white); display:flex; align-items:center; gap:10px; }
+.apps-count-badge { font-family:var(--mono); font-size:9px; font-weight:700; padding:2px 7px; background:var(--white-10); border:1px solid var(--white-10); border-radius:20px; color:var(--white-60); }
+.apps-pc-meta { font-family:var(--mono); font-size:10px; color:var(--muted); display:flex; align-items:center; gap:10px; }
+.apps-list { padding:12px 16px; display:grid; grid-template-columns:repeat(auto-fill, minmax(210px,1fr)); gap:6px; max-height:200px; overflow-y:auto; }
+.apps-list.collapsed { display:none; }
+.app-pill { display:flex; align-items:center; gap:6px; padding:5px 9px; background:var(--s3); border:1px solid var(--border); border-radius:5px; font-family:var(--mono); font-size:10px; color:var(--white-90); overflow:hidden; transition:background 0.1s; }
+.app-pill:hover { background:var(--s4); }
+.app-pill-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.apps-all-wrap { margin:0 28px; max-height:calc(100vh - 400px); overflow-y:auto; }
+
 /* ── LIGHT THEME ── */
 body.light {
   --bg: #f2f2f2; --surface: #ffffff; --s2: #f8f8f8; --s3: #eeeeee; --s4: #e0e0e0;
@@ -789,8 +831,15 @@ body.light .login-field input:focus { border-color: rgba(0,0,0,0.4); }
   </div>
 </div>
 
-<!-- TOOLBAR -->
-<div class="toolbar-section-label">Asset Table</div>
+<!-- SECTION TABS -->
+<div class="section-tabs">
+  <button class="tab-btn active" id="tabAssets" onclick="switchTab('assets')">🖥 Asset Table</button>
+  <button class="tab-btn" id="tabChanges" onclick="switchTab('changes')">📦 App Changes <span id="changesBadge" style="display:none;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:10px;margin-left:4px" id="changeCount">0</span></button>
+  <button class="tab-btn" id="tabAllApps" onclick="switchTab('allapps')">🗂 All Installed Apps</button>
+</div>
+
+<!-- TAB: ASSET TABLE -->
+<div class="tab-panel active" id="panelAssets">
 <div class="toolbar">
   <div class="toolbar-left">
     <div class="search-wrap">
@@ -854,6 +903,104 @@ body.light .login-field input:focus { border-color: rgba(0,0,0,0.4); }
   <div class="footer-stats" id="footerStats">—</div>
   <div class="footer-stats">Auto-refresh every 60s</div>
 </footer>
+
+</div><!-- /tab-panel assets -->
+
+<!-- TAB: APP CHANGES -->
+<div class="tab-panel" id="panelChanges">
+  <div class="app-kpi-strip">
+    <div class="app-kpi">
+      <div class="app-kpi-label">Total Changes</div>
+      <div class="app-kpi-val" id="akTotal">—</div>
+    </div>
+    <div class="app-kpi">
+      <div class="app-kpi-label">Installed</div>
+      <div class="app-kpi-val" style="color:var(--green)" id="akAdded">—</div>
+    </div>
+    <div class="app-kpi">
+      <div class="app-kpi-label">Removed</div>
+      <div class="app-kpi-val" style="color:var(--red)" id="akRemoved">—</div>
+    </div>
+    <div class="app-kpi">
+      <div class="app-kpi-label">PCs Affected</div>
+      <div class="app-kpi-val" id="akPcs">—</div>
+    </div>
+  </div>
+
+  <div class="apps-toolbar">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="search-wrap" style="min-width:200px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="appChangeSearch" placeholder="Search PC or app..." oninput="renderAppChanges()" />
+      </div>
+      <select id="appChangeType" onchange="renderAppChanges()">
+        <option value="">All Changes</option>
+        <option value="added">Installed</option>
+        <option value="removed">Removed</option>
+      </select>
+    </div>
+    <span class="count-badge" id="appChangeCount">0 events</span>
+  </div>
+
+  <div class="app-changes-wrap" id="appChangesWrap">
+    <div class="table-msg">
+      <span class="icon">📦</span>
+      <div class="title">No app changes yet</div>
+      <div>Agent will report installs & removals automatically</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand"><strong>Dhiran</strong> · App Change Log</div>
+    <div class="footer-stats" id="footerApps">—</div>
+    <div class="footer-stats">Updates every agent cycle</div>
+  </footer>
+</div>
+
+<!-- TAB: ALL INSTALLED APPS -->
+<div class="tab-panel" id="panelAllApps">
+  <div class="app-kpi-strip">
+    <div class="app-kpi">
+      <div class="app-kpi-label">Total Apps</div>
+      <div class="app-kpi-val" id="aaTotalApps">—</div>
+    </div>
+    <div class="app-kpi">
+      <div class="app-kpi-label">Unique Apps</div>
+      <div class="app-kpi-val" id="aaUniqueApps">—</div>
+    </div>
+    <div class="app-kpi">
+      <div class="app-kpi-label">PCs Reporting</div>
+      <div class="app-kpi-val" id="aaPcsCount">—</div>
+    </div>
+  </div>
+
+  <div class="apps-toolbar">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div class="search-wrap" style="min-width:220px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="allAppsSearch" placeholder="Search app name..." oninput="renderAllApps()" />
+      </div>
+      <select id="allAppsPc" onchange="renderAllApps()">
+        <option value="">All PCs</option>
+      </select>
+    </div>
+    <button class="btn btn-outline" onclick="exportAppsCSV()">⬇ Export Apps CSV</button>
+  </div>
+
+  <div class="apps-all-wrap" id="appsAllWrap">
+    <div class="table-msg">
+      <span class="icon">🗂</span>
+      <div class="title">No app data yet</div>
+      <div>Agent reports installed apps on each PC</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-brand"><strong>Dhiran</strong> · Installed Apps Inventory</div>
+    <div class="footer-stats" id="footerAllApps">—</div>
+    <div class="footer-stats">Per-PC app list</div>
+  </footer>
+</div>
 
 </div><!-- /wrap -->
 </div><!-- /dashPage -->
@@ -1067,6 +1214,7 @@ async function loadAssets() {
     setStatus('Live');
     document.getElementById('syncTime').textContent = 'Synced ' + new Date().toLocaleTimeString();
     document.getElementById('insightsRow').style.display = '';
+    loadAppData();
   } catch (err) {
     showMsg('⚠', 'Connection failed', err.message);
     setStatus('Error');
@@ -1237,6 +1385,183 @@ function fmtTime(ts) {
 }
 function trunc(s,n) { if(!s) return s; return s.length>n?s.slice(0,n)+'…':s; }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ════════════════════════════════════════════
+// TAB SWITCHING
+// ════════════════════════════════════════════
+function switchTab(tab) {
+  ['assets','changes','allapps'].forEach(t => {
+    document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1).replace('apps','Apps').replace('changes','Changes')}`)?.classList.remove('active');
+    document.getElementById(`panel${t.charAt(0).toUpperCase()+t.slice(1).replace('apps','AllApps').replace('changes','Changes')}`)?.classList.remove('active');
+  });
+  const tabIds = { assets:'tabAssets', changes:'tabChanges', allapps:'tabAllApps' };
+  const panelIds = { assets:'panelAssets', changes:'panelChanges', allapps:'panelAllApps' };
+  document.getElementById(tabIds[tab])?.classList.add('active');
+  document.getElementById(panelIds[tab])?.classList.add('active');
+  if (tab === 'changes') renderAppChanges();
+  if (tab === 'allapps') renderAllApps();
+}
+
+// ════════════════════════════════════════════
+// APP CHANGES — fetch from Supabase
+// ════════════════════════════════════════════
+let appChangesData = [];
+let allAppsData    = [];   // per-PC installed apps
+
+async function loadAppData() {
+  if (!SB_URL || !SB_KEY) return;
+  try {
+    // Fetch app_changes table
+    const r1 = await fetch(
+      `${SB_URL}/rest/v1/app_changes?select=*&order=changed_at.desc&limit=500`,
+      { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } }
+    );
+    if (r1.ok) {
+      appChangesData = await r1.json();
+      updateAppChangeKPIs();
+      // badge count
+      const cnt = appChangesData.length;
+      const badge = document.getElementById('changesBadge');
+      if (badge) { badge.textContent = cnt; badge.style.display = cnt ? 'inline' : 'none'; }
+    }
+
+    // Fetch installed_apps table
+    const r2 = await fetch(
+      `${SB_URL}/rest/v1/installed_apps?select=*&order=pc_name.asc`,
+      { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } }
+    );
+    if (r2.ok) {
+      allAppsData = await r2.json();
+      updateAllAppsKPIs();
+      buildAllAppsPcFilter();
+    }
+  } catch(e) { console.warn('App data fetch failed:', e); }
+}
+
+function updateAppChangeKPIs() {
+  const added   = appChangesData.filter(a => a.change_type === 'added');
+  const removed = appChangesData.filter(a => a.change_type === 'removed');
+  const pcs     = new Set(appChangesData.map(a => a.pc_name)).size;
+  document.getElementById('akTotal').textContent   = appChangesData.length || '0';
+  document.getElementById('akAdded').textContent   = added.length || '0';
+  document.getElementById('akRemoved').textContent = removed.length || '0';
+  document.getElementById('akPcs').textContent     = pcs || '0';
+}
+
+function updateAllAppsKPIs() {
+  const totalApps  = allAppsData.length;
+  const uniqueApps = new Set(allAppsData.map(a => a.app_name)).size;
+  const pcs        = new Set(allAppsData.map(a => a.pc_name)).size;
+  document.getElementById('aaTotalApps').textContent  = totalApps || '0';
+  document.getElementById('aaUniqueApps').textContent = uniqueApps || '0';
+  document.getElementById('aaPcsCount').textContent   = pcs || '0';
+}
+
+function buildAllAppsPcFilter() {
+  const pcs  = [...new Set(allAppsData.map(a => a.pc_name).filter(Boolean))].sort();
+  const sel  = document.getElementById('allAppsPc');
+  const cur  = sel.value;
+  sel.innerHTML = '<option value="">All PCs</option>' +
+    pcs.map(p => `<option value="${esc(p)}"${p===cur?' selected':''}>${esc(p)}</option>`).join('');
+}
+
+function renderAppChanges() {
+  const q    = (document.getElementById('appChangeSearch')?.value || '').toLowerCase();
+  const type = document.getElementById('appChangeType')?.value || '';
+
+  let rows = appChangesData.filter(a => {
+    if (q && !(a.pc_name||'').toLowerCase().includes(q) && !(a.app_name||'').toLowerCase().includes(q)) return false;
+    if (type && a.change_type !== type) return false;
+    return true;
+  });
+
+  document.getElementById('appChangeCount').textContent = `${rows.length} event${rows.length!==1?'s':''}`;
+
+  const wrap = document.getElementById('appChangesWrap');
+  if (!rows.length) {
+    wrap.innerHTML = `<div class="table-msg"><span class="icon">📦</span><div class="title">No changes found</div><div>Try adjusting filters</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = rows.map(a => {
+    const isAdded = a.change_type === 'added';
+    return `<div class="app-change-item">
+      <div class="app-change-pc">🖥 ${esc(a.pc_name||'—')}</div>
+      <div>
+        <span class="app-change-type ${isAdded?'app-type-added':'app-type-removed'}">
+          ${isAdded?'+ INSTALLED':'− REMOVED'}
+        </span>
+      </div>
+      <div class="app-change-name" title="${esc(a.app_name||'')}">📦 ${esc(a.app_name||'—')}</div>
+      <div class="app-change-time">${fmtTime(a.changed_at)}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('footerApps').textContent =
+    `${rows.length} changes · ${new Set(rows.map(r=>r.pc_name)).size} PCs`;
+}
+
+function renderAllApps() {
+  const q   = (document.getElementById('allAppsSearch')?.value || '').toLowerCase();
+  const pc  = document.getElementById('allAppsPc')?.value || '';
+
+  // Group by PC
+  const grouped = {};
+  allAppsData.forEach(a => {
+    if (q && !(a.app_name||'').toLowerCase().includes(q)) return;
+    if (pc && a.pc_name !== pc) return;
+    if (!grouped[a.pc_name]) grouped[a.pc_name] = [];
+    grouped[a.pc_name].push(a.app_name);
+  });
+
+  const wrap = document.getElementById('appsAllWrap');
+  const pcs  = Object.keys(grouped).sort();
+
+  if (!pcs.length) {
+    wrap.innerHTML = `<div class="table-msg"><span class="icon">🗂</span><div class="title">No apps found</div><div>Try adjusting filters</div></div>`;
+    return;
+  }
+
+  wrap.innerHTML = pcs.map(pcName => {
+    const apps = grouped[pcName].sort();
+    const pcObj = allData.find(a => a.pc_name === pcName);
+    const status = pcObj ? getStatus(pcObj.last_seen) : 'Offline';
+    const sClass = `badge badge-${status.toLowerCase()}`;
+    return `<div class="apps-pc-card">
+      <div class="apps-pc-header" onclick="this.nextElementSibling.classList.toggle('collapsed')">
+        <div class="apps-pc-name">
+          🖥 ${esc(pcName)}
+          <span class="apps-count-badge">${apps.length} apps</span>
+          <span class="${sClass}" style="font-size:9px;padding:1px 7px"><span class="badge-dot"></span>${status}</span>
+        </div>
+        <div class="apps-pc-meta">
+          <span>${pcObj?.ip_address||''}</span>
+          <span>${pcObj?.logged_user||''}</span>
+          <span>▾</span>
+        </div>
+      </div>
+      <div class="apps-list">
+        ${apps.map(name => `<div class="app-pill"><span>📦</span><span class="app-pill-name" title="${esc(name)}">${esc(name)}</span></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('footerAllApps').textContent =
+    `${pcs.length} PCs · ${Object.values(grouped).reduce((s,a)=>s+a.length,0)} apps total`;
+}
+
+function exportAppsCSV() {
+  if (!allAppsData.length) { toast('No app data to export', 'error'); return; }
+  const cols = ['pc_name','app_name','recorded_at'];
+  const blob = new Blob([[cols.join(','), ...allAppsData.map(a =>
+    cols.map(c => `"${String(a[c]||'').replace(/"/g,'""')}"`).join(',')
+  )].join('\n')], {type:'text/csv'});
+  const el = document.createElement('a');
+  el.href = URL.createObjectURL(blob);
+  el.download = `dhiran_apps_${new Date().toISOString().slice(0,10)}.csv`;
+  el.click();
+  toast('Apps CSV exported ✓', 'success');
+}
 
 document.addEventListener('keydown', e => {
   if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault(); const si=document.getElementById('searchInput'); if(si) si.focus();}
