@@ -4,94 +4,1244 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dhiran — IT Asset Inventory</title>
-
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#05080f;
-  --surface:#0b1120;
-  --border:#1c2e4a;
-  --border2:#243a5a;
-  --text:#e2e8f0;
-  --muted:#4a6080;
-  --teal:#00e5c8;
+  --bg:         #080808;
+  --surface:    #111111;
+  --s2:         #181818;
+  --s3:         #202020;
+  --s4:         #2a2a2a;
+  --border:     #222222;
+  --border2:    #333333;
+  --border3:    #444444;
+  --white:      #ffffff;
+  --white-90:   rgba(255,255,255,0.9);
+  --white-60:   rgba(255,255,255,0.6);
+  --white-30:   rgba(255,255,255,0.3);
+  --white-10:   rgba(255,255,255,0.1);
+  --white-05:   rgba(255,255,255,0.05);
+  --text:       #e8e8e8;
+  --muted:      #666666;
+  --muted2:     #3a3a3a;
+  --green:      #4ade80;
+  --green-dim:  rgba(74,222,128,0.12);
+  --amber:      #fbbf24;
+  --amber-dim:  rgba(251,191,36,0.12);
+  --red:        #f87171;
+  --red-dim:    rgba(248,113,113,0.12);
+  --blue:       #93c5fd;
+  --blue-dim:   rgba(147,197,253,0.12);
+  --mono:       'IBM Plex Mono', monospace;
+  --display:    'Syne', sans-serif;
+  --sans:       'Syne', sans-serif;
 }
 
-/* 🌞 Light Theme */
-body.light {
-  --bg:#ffffff;
-  --surface:#f5f7fa;
-  --border:#d0d7e2;
-  --border2:#c3cedc;
-  --text:#0f172a;
-  --muted:#64748b;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
 body {
-  background:var(--bg);
-  color:var(--text);
-  font-family:'DM Sans', sans-serif;
-  margin:0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Header */
+/* grain */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 9998;
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.01) 3px, rgba(255,255,255,0.01) 4px);
+  pointer-events: none; z-index: 9997;
+}
+
+/* ═══════════════════════════════════════
+   LOGIN PAGE
+═══════════════════════════════════════ */
+#loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* animated grid bg */
+.login-grid {
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-glow {
+  position: fixed;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-box {
+  position: relative;
+  z-index: 2;
+  width: 400px;
+  max-width: 92vw;
+  animation: loginIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+@keyframes loginIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Logo area */
+.login-logo {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.login-mark {
+  width: 60px; height: 60px;
+  background: var(--white);
+  border-radius: 14px;
+  display: inline-grid;
+  place-items: center;
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(255,255,255,0.08);
+}
+.login-mark::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 60%);
+}
+
+.login-title {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.login-subtitle {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* Card */
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+}
+
+.login-field {
+  margin-bottom: 18px;
+}
+.login-field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.login-input-wrap .field-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+.login-field input {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 11px 14px 11px 38px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.login-field input:focus {
+  border-color: var(--white-30);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+}
+.login-field input::placeholder { color: var(--muted2); }
+
+/* eye toggle */
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.eye-btn:hover { color: var(--text); }
+
+/* error msg */
+.login-error {
+  background: var(--red-dim);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 7px;
+  padding: 9px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--red);
+  margin-bottom: 16px;
+  display: none;
+  animation: shake 0.4s ease;
+}
+.login-error.show { display: block; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60%  { transform: translateX(-6px); }
+  40%, 80%  { transform: translateX(6px); }
+}
+
+/* submit btn */
+.login-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--white);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.login-btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+}
+.login-btn:hover {
+  background: #e8e8e8;
+  box-shadow: 0 8px 30px rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+.login-btn:active { transform: translateY(0); }
+.login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+/* spinner inside btn */
+.btn-spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(0,0,0,0.3);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.login-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+.login-footer span { display: block; margin-top: 4px; }
+
+/* attempts badge */
+.attempts-warn {
+  text-align: center;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--amber);
+  display: none;
+}
+.attempts-warn.show { display: block; }
+
+/* ═══════════════════════════════════════
+   DASHBOARD (hidden until login)
+═══════════════════════════════════════ */
+#dashPage { display: none; }
+#dashPage.active {
+  display: block;
+  animation: dashIn 0.5s ease both;
+}
+@keyframes dashIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.wrap { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── HEADER ── */
 header {
-  display:flex;
-  justify-content:space-between;
-  padding:15px 25px;
-  border-bottom:1px solid var(--border);
+  position: sticky; top: 0; z-index: 200;
+  height: 56px;
+  background: rgba(8,8,8,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--white); border-radius: 6px;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: #000;
+  flex-shrink: 0; position: relative; overflow: hidden;
+}
+.brand-mark::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%); }
+.brand-text { display: flex; flex-direction: column; gap: 1px; }
+.brand-name { font-family: var(--display); font-size: 14px; font-weight: 800; color: var(--white); letter-spacing: 3px; line-height: 1; text-transform: uppercase; }
+.brand-sub  { font-size: 9px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-family: var(--mono); }
+
+.header-center {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  background: var(--s2); border: 1px solid var(--border2);
+  padding: 5px 12px; border-radius: 20px;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 6px var(--green);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+.sync-time { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+/* user chip */
+.user-chip {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--s2); border: 1px solid var(--border2);
+  padding: 5px 12px; border-radius: 20px;
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+}
+.user-avatar {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--white); color: #000;
+  display: grid; place-items: center;
+  font-size: 9px; font-weight: 700; font-family: var(--mono);
 }
 
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 6px;
+  border: 1px solid var(--border2); background: var(--surface);
+  color: var(--muted); cursor: pointer;
+  display: grid; place-items: center; font-size: 14px;
+  transition: all 0.2s; position: relative;
+}
+.icon-btn:hover { border-color: var(--white-30); color: var(--white); }
+.notif-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 6px; height: 6px; background: var(--red);
+  border-radius: 50%; border: 1px solid var(--bg);
+}
+
+/* ── BUTTONS ── */
 .btn {
-  padding:6px 12px;
-  border:1px solid var(--border2);
-  background:none;
-  color:var(--text);
-  cursor:pointer;
-  border-radius:6px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 15px; border-radius: 6px;
+  font-family: var(--sans); font-size: 12px; font-weight: 700;
+  cursor: pointer; border: none; transition: all 0.18s;
+  white-space: nowrap; letter-spacing: 0.5px;
 }
+.btn-white { background: var(--white); color: #000; }
+.btn-white:hover { background: #e0e0e0; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(255,255,255,0.15); }
+.btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border2); }
+.btn-outline:hover { color: var(--text); border-color: var(--border3); background: var(--white-05); }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid transparent; }
+.btn-ghost:hover { color: var(--text); }
+.btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
 
-/* Cards */
-.card {
-  background:var(--surface);
-  border:1px solid var(--border);
-  padding:20px;
-  margin:20px;
-  border-radius:10px;
+/* ── OVERLAY/MODAL ── */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 500; display: flex; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+.overlay.hidden { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal { background: var(--surface); border: 1px solid var(--border3); border-radius: 14px; padding: 32px; width: 480px; max-width: 92vw; animation: popIn 0.25s ease; position: relative; }
+@keyframes popIn { from { transform: scale(0.95) translateY(12px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.modal-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+.modal-title { font-size: 16px; font-weight: 800; color: var(--white); font-family: var(--display); letter-spacing: 1px; text-transform: uppercase; }
+.modal-sub { font-size: 12px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-family: var(--mono); font-size: 9px; font-weight: 600; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 7px; }
+.field input { width: 100%; background: var(--s2); border: 1px solid var(--border2); border-radius: 6px; padding: 10px 13px; color: var(--text); font-family: var(--mono); font-size: 11px; transition: border-color 0.2s; }
+.field input:focus { outline: none; border-color: var(--white-30); }
+.field input::placeholder { color: var(--muted2); }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; }
+
+/* ── SETUP BANNER ── */
+#setupBanner { margin: 16px 28px; background: var(--s2); border: 1px solid var(--border2); border-left: 3px solid var(--white); border-radius: 0 8px 8px 0; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; animation: slideDown 0.4s ease; }
+@keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+#setupBanner.hidden { display: none; }
+.banner-text { font-size: 12.5px; color: var(--text); line-height: 1.4; }
+.banner-text strong { color: var(--white); }
+
+/* ── KPI STRIP ── */
+.kpi-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 16px 28px; }
+.kpi { background: var(--surface); padding: 18px 20px; position: relative; overflow: hidden; transition: background 0.2s; animation: fadeUp 0.4s ease backwards; }
+.kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--white-10); transition: background 0.2s; }
+.kpi:hover { background: var(--s2); }
+.kpi:hover::before { background: var(--white-30); }
+.kpi-icon { font-size: 18px; margin-bottom: 10px; opacity: 0.7; }
+.kpi-val { font-family: var(--mono); font-size: 30px; font-weight: 700; color: var(--white); line-height: 1; margin-bottom: 5px; }
+.kpi.c-green .kpi-val { color: var(--green); }
+.kpi.c-amber .kpi-val { color: var(--amber); }
+.kpi.c-red   .kpi-val { color: var(--red); }
+.kpi.c-blue  .kpi-val { color: var(--blue); }
+.kpi-label { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.kpi-hint { font-size: 11px; color: var(--muted); }
+@keyframes fadeUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ── INSIGHTS ROW ── */
+.insights-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 0 28px 14px; }
+.insight-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; position: relative; overflow: hidden; animation: fadeUp 0.5s ease backwards; }
+.insight-card-title { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+.donut-wrap { display: flex; align-items: center; gap: 14px; }
+.donut-legend { font-family: var(--mono); font-size: 10px; }
+.donut-item { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; color: var(--muted); }
+.donut-dot { width: 7px; height: 7px; border-radius: 50%; }
+.uptime-bars { display: flex; gap: 3px; flex-wrap: wrap; align-items: center; }
+.uptime-cell { width: 10px; height: 22px; border-radius: 2px; background: var(--s3); cursor: pointer; transition: transform 0.1s; }
+.uptime-cell:hover { transform: scaleY(1.15); }
+.uptime-cell.up   { background: var(--green); opacity: 0.75; }
+.uptime-cell.idle { background: var(--amber); opacity: 0.75; }
+.uptime-cell.dn   { background: var(--red);   opacity: 0.5; }
+
+/* ── ALERT PANEL ── */
+.alert-panel { margin: 0 28px 12px; background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.2); border-radius: 8px; overflow: hidden; animation: fadeUp 0.5s ease; }
+.alert-panel-header { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(248,113,113,0.15); }
+.alert-panel-title { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--red); font-weight: 700; }
+.alert-item { display: flex; align-items: center; gap: 12px; padding: 9px 16px; font-family: var(--mono); font-size: 11px; border-bottom: 1px solid var(--border); color: var(--text); }
+.alert-item:last-child { border-bottom: none; }
+.alert-sev { padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; }
+.alert-sev.high { background: var(--red-dim); color: var(--red); }
+.alert-sev.med  { background: var(--amber-dim); color: var(--amber); }
+
+/* ── TOOLBAR ── */
+.toolbar { display: flex; align-items: center; justify-content: space-between; padding: 0 28px 12px; gap: 10px; flex-wrap: wrap; }
+.toolbar-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.search-wrap { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 12px; min-width: 220px; transition: border-color 0.2s; }
+.search-wrap:focus-within { border-color: var(--white-30); }
+.search-wrap svg { color: var(--muted); flex-shrink: 0; }
+.search-wrap input { background: none; border: none; outline: none; color: var(--text); font-family: var(--mono); font-size: 11px; flex: 1; min-width: 0; }
+.search-wrap input::placeholder { color: var(--muted2); }
+select { background: var(--surface); border: 1px solid var(--border2); border-radius: 6px; padding: 7px 12px; color: var(--text); font-family: var(--mono); font-size: 11px; cursor: pointer; transition: border-color 0.2s; -webkit-appearance: none; }
+select:focus { outline: none; border-color: var(--white-30); }
+.count-badge { font-family: var(--mono); font-size: 10px; color: var(--muted); padding: 4px 10px; background: var(--s2); border: 1px solid var(--border); border-radius: 20px; }
+.toolbar-section-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0 28px 8px; display: flex; align-items: center; gap: 10px; }
+.toolbar-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── TABLE ── */
+.table-wrap { margin: 0 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: auto; max-height: calc(100vh - 440px); min-height: 200px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead { position: sticky; top: 0; z-index: 10; background: var(--s2); border-bottom: 1px solid var(--border2); }
+th { padding: 10px 14px; text-align: left; font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); white-space: nowrap; cursor: pointer; user-select: none; transition: color 0.15s; }
+th:hover { color: var(--white); }
+td { padding: 10px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; font-family: var(--mono); font-size: 11.5px; transition: background 0.1s; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--white-05); }
+.pc-name { font-weight: 700; font-size: 12px; color: var(--white); font-family: var(--sans); }
+.row-num { color: var(--muted); font-size: 10px; margin-right: 6px; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 20px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.5px; }
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.badge-online  { color: var(--green); background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2); }
+.badge-idle    { color: var(--amber); background: var(--amber-dim); border: 1px solid rgba(251,191,36,0.2); }
+.badge-offline { color: var(--red);   background: var(--red-dim);   border: 1px solid rgba(248,113,113,0.2); }
+.os-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; }
+.dept-tag { display: inline-block; padding: 2px 7px; background: var(--white-05); border: 1px solid var(--white-10); color: var(--white-60); border-radius: 3px; font-size: 9px; font-family: var(--mono); font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; }
+.dim { color: var(--muted); }
+.health-bar { display: flex; align-items: center; gap: 6px; }
+.health-track { width: 56px; height: 4px; background: var(--s4); border-radius: 2px; overflow: hidden; }
+.health-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.5s; }
+.health-fill.mid { background: var(--amber); }
+.health-fill.low { background: var(--red); }
+.health-pct { font-size: 10px; color: var(--muted); }
+.table-msg { padding: 60px 20px; text-align: center; color: var(--muted); font-family: var(--mono); font-size: 12px; }
+.table-msg .icon { font-size: 36px; margin-bottom: 14px; display: block; opacity: 0.4; }
+.table-msg .title { color: var(--text); font-size: 13px; margin-bottom: 6px; font-family: var(--display); font-weight: 700; }
+.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border2); border-top-color: var(--white); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+
+/* ── FOOTER ── */
+footer { padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); margin-top: auto; }
+.footer-brand { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.footer-brand strong { color: var(--white); }
+.footer-stats { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 22px; right: 22px; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 18px; font-size: 12px; font-family: var(--mono); z-index: 600; opacity: 0; transform: translateY(10px); transition: all 0.25s ease; max-width: 300px; pointer-events: none; }
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.success { border-color: rgba(74,222,128,0.35); color: var(--green); }
+#toast.error   { border-color: rgba(248,113,113,0.35); color: var(--red); }
+#toast.info    { border-color: rgba(255,255,255,0.2); color: var(--white); }
+
+/* ── LIGHT THEME ── */
+body.light {
+  --bg: #f2f2f2; --surface: #ffffff; --s2: #f8f8f8; --s3: #eeeeee; --s4: #e0e0e0;
+  --border: #e0e0e0; --border2: #cccccc; --border3: #bbbbbb;
+  --white: #000000; --white-90: rgba(0,0,0,0.9); --white-60: rgba(0,0,0,0.6);
+  --white-30: rgba(0,0,0,0.3); --white-10: rgba(0,0,0,0.1); --white-05: rgba(0,0,0,0.04);
+  --text: #1a1a1a; --muted: #888888; --muted2: #cccccc;
 }
+body.light header   { background: rgba(242,242,242,0.92); }
+body.light select   { background: #fff; }
+body.light .search-wrap { background: #fff; }
+body.light .modal   { background: #fff; }
+body.light #toast   { background: #fff; }
+body.light .login-card { background: #fff; border-color: #ddd; }
+body.light .login-mark { box-shadow: 0 0 40px rgba(0,0,0,0.08); }
+body.light::before, body.light::after { opacity: 0; }
+body.light .login-grid  { background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px); }
+body.light .login-glow  { background: radial-gradient(circle, rgba(0,0,0,0.04) 0%, transparent 70%); }
+body.light .login-btn   { background: #111; color: #fff; }
+body.light .login-btn:hover { background: #333; }
+body.light .login-field input { background: #f4f4f4; border-color: #ddd; color: #111; }
+body.light .login-field input:focus { border-color: rgba(0,0,0,0.4); }
 
-h1 { color:var(--teal); }
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .insights-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  header { padding: 0 16px; }
+  .header-center { display: none; }
+  .kpi-strip { grid-template-columns: repeat(2, 1fr); margin: 12px 16px; }
+  .insights-row { grid-template-columns: 1fr; margin: 0 16px 12px; }
+  .toolbar { padding: 0 16px 12px; }
+  .table-wrap { margin: 0 16px; }
+  footer { padding: 14px 16px; flex-direction: column; gap: 6px; }
+  #setupBanner { margin: 12px 16px; }
+  .toolbar-section-label { padding: 0 16px 8px; }
+}
 </style>
 </head>
-
 <body>
 
-<header>
-  <h1>IT Asset Dashboard</h1>
-  <button class="btn" onclick="toggleTheme()">🌙 Theme</button>
-</header>
+<!-- ═══ LOGIN PAGE ═══ -->
+<div id="loginPage">
+  <div class="login-grid"></div>
+  <div class="login-glow"></div>
 
-<div class="card">
-  <h2>Total Systems: 25</h2>
-  <p>Online: 18</p>
-  <p>Offline: 7</p>
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-mark">D</div>
+      <span class="login-title">Dhiran</span>
+      <span class="login-subtitle">IT Asset Inventory System</span>
+    </div>
+
+    <div class="login-card">
+      <div class="login-error" id="loginError">
+        ⚠ Invalid username or password
+      </div>
+
+      <div class="login-field">
+        <label>Username</label>
+        <div class="login-input-wrap">
+          <span class="field-icon">👤</span>
+          <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label>Password</label>
+        <div class="login-input-wrap">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password" />
+          <button class="eye-btn" id="eyeBtn" onclick="togglePw()" title="Show/Hide password">👁</button>
+        </div>
+      </div>
+
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">
+        Sign In
+      </button>
+    </div>
+
+    <div class="attempts-warn" id="attemptsWarn"></div>
+
+    <div class="login-footer">
+      <span>Dhiran IT Asset Inventory v2.0</span>
+      <span>Secure · Local · Fast</span>
+    </div>
+  </div>
 </div>
 
+<!-- ═══ DASHBOARD PAGE ═══ -->
+<div id="dashPage">
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="brand">
+    <div class="brand-mark">D</div>
+    <div class="brand-text">
+      <div class="brand-name">Dhiran</div>
+      <div class="brand-sub">IT Asset Inventory</div>
+    </div>
+  </div>
+
+  <div class="header-center">
+    <div class="live-dot"></div>
+    <span id="syncStatus">Connecting...</span>
+  </div>
+
+  <div class="header-right">
+    <span class="sync-time" id="syncTime"></span>
+    <div class="user-chip">
+      <div class="user-avatar" id="userAvatar">A</div>
+      <span id="userLabel">admin</span>
+    </div>
+    <button class="icon-btn" id="notifBtn" title="Alerts" onclick="toggleAlerts()">
+      🔔
+      <span class="notif-dot" id="notifDot" style="display:none"></span>
+    </button>
+    <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle Theme">☀</button>
+    <button class="btn btn-outline" onclick="openConfig()">⚙ Config</button>
+    <button class="btn btn-outline" onclick="doLogout()" title="Logout">⏏ Logout</button>
+    <button class="btn btn-white" onclick="loadAssets()">↻ Refresh</button>
+  </div>
+</header>
+
+<!-- SETUP BANNER -->
+<div id="setupBanner">
+  <div class="banner-text">
+    <strong>First-time setup —</strong> Connect Dhiran to your Supabase database to start monitoring assets.
+  </div>
+  <button class="btn btn-white" onclick="openConfig()">Connect →</button>
+</div>
+
+<!-- CONFIG MODAL -->
+<div class="overlay hidden" id="configOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Database Config</div>
+        <div class="modal-sub">Your credentials stay in this browser only.<br>Never shared or sent anywhere.</div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeConfig()">✕</button>
+    </div>
+    <div class="field">
+      <label>Supabase Project URL</label>
+      <input id="cfgUrl" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co" />
+    </div>
+    <div class="field">
+      <label>Anon / Public Key</label>
+      <input id="cfgKey" type="text" placeholder="eyJhbGciOiJIUzI1NiIs..." />
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="clearConfig()">Clear</button>
+      <button class="btn btn-outline" onclick="closeConfig()">Cancel</button>
+      <button class="btn btn-white" onclick="saveConfig()">Save & Connect</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI STRIP -->
+<div class="kpi-strip" style="margin-top:18px;">
+  <div class="kpi" style="animation-delay:0.05s">
+    <div class="kpi-icon">🖥</div>
+    <div class="kpi-label">Total Assets</div>
+    <div class="kpi-val" id="sTotal">—</div>
+    <div class="kpi-hint">registered PCs</div>
+  </div>
+  <div class="kpi c-green" style="animation-delay:0.1s">
+    <div class="kpi-icon">🟢</div>
+    <div class="kpi-label">Online Now</div>
+    <div class="kpi-val" id="sOnline">—</div>
+    <div class="kpi-hint">&lt; 5 min ago</div>
+  </div>
+  <div class="kpi c-amber" style="animation-delay:0.15s">
+    <div class="kpi-icon">🌙</div>
+    <div class="kpi-label">Idle</div>
+    <div class="kpi-val" id="sIdle">—</div>
+    <div class="kpi-hint">5–30 min ago</div>
+  </div>
+  <div class="kpi c-red" style="animation-delay:0.2s">
+    <div class="kpi-icon">⭕</div>
+    <div class="kpi-label">Offline</div>
+    <div class="kpi-val" id="sOffline">—</div>
+    <div class="kpi-hint">not reporting</div>
+  </div>
+  <div class="kpi c-blue" style="animation-delay:0.25s">
+    <div class="kpi-icon">🪟</div>
+    <div class="kpi-label">Windows</div>
+    <div class="kpi-val" id="sWin">—</div>
+    <div class="kpi-hint">machines</div>
+  </div>
+  <div class="kpi" style="animation-delay:0.3s">
+    <div class="kpi-icon">🏢</div>
+    <div class="kpi-label">Departments</div>
+    <div class="kpi-val" id="sDept">—</div>
+    <div class="kpi-hint">reporting units</div>
+  </div>
+</div>
+
+<!-- ALERT PANEL -->
+<div class="alert-panel" id="alertPanel" style="display:none">
+  <div class="alert-panel-header">
+    <span class="alert-panel-title">⚠ Active Alerts</span>
+    <button class="btn btn-ghost" style="padding:2px 8px;font-size:11px" onclick="toggleAlerts()">✕</button>
+  </div>
+  <div id="alertList"></div>
+</div>
+
+<!-- INSIGHTS ROW -->
+<div class="insights-row" id="insightsRow" style="display:none">
+  <div class="insight-card" style="animation-delay:0.35s">
+    <div class="insight-card-title">
+      Status Breakdown
+      <span id="insightTotal" style="color:var(--white-60)">—</span>
+    </div>
+    <div class="donut-wrap">
+      <svg width="70" height="70" viewBox="0 0 70 70">
+        <circle cx="35" cy="35" r="28" fill="none" stroke="var(--s3)" stroke-width="10"/>
+        <circle id="donut-online"  cx="35" cy="35" r="28" fill="none" stroke="var(--green)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 35 35)" stroke-dasharray="0 175.93" style="transition:stroke-dasharray 0.8s ease"/>
+        <circle id="donut-idle"    cx="35" cy="35" r="28" fill="none" stroke="var(--amber)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 35 35)" stroke-dasharray="0 175.93" style="transition:stroke-dasharray 0.8s ease;transition-delay:0.1s"/>
+        <circle id="donut-offline" cx="35" cy="35" r="28" fill="none" stroke="var(--red)"   stroke-width="10" stroke-linecap="round" transform="rotate(-90 35 35)" stroke-dasharray="0 175.93" style="transition:stroke-dasharray 0.8s ease;transition-delay:0.2s"/>
+      </svg>
+      <div class="donut-legend">
+        <div class="donut-item"><div class="donut-dot" style="background:var(--green)"></div><span id="leg-online">Online —</span></div>
+        <div class="donut-item"><div class="donut-dot" style="background:var(--amber)"></div><span id="leg-idle">Idle —</span></div>
+        <div class="donut-item"><div class="donut-dot" style="background:var(--red)"></div><span id="leg-offline">Offline —</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-card" style="animation-delay:0.4s">
+    <div class="insight-card-title">OS Distribution</div>
+    <div id="osBars" style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--muted)">No data</div>
+    </div>
+  </div>
+
+  <div class="insight-card" style="animation-delay:0.45s">
+    <div class="insight-card-title">
+      Last-Seen Heatmap
+      <span style="color:var(--white-30);font-size:9px">60 slots</span>
+    </div>
+    <div class="uptime-bars" id="uptimeBars"></div>
+    <div style="display:flex;gap:12px;margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted)">
+      <span><span style="color:var(--green)">■</span> Online</span>
+      <span><span style="color:var(--amber)">■</span> Idle</span>
+      <span><span style="color:var(--red)">■</span> Offline</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar-section-label">Asset Table</div>
+<div class="toolbar">
+  <div class="toolbar-left">
+    <div class="search-wrap">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="searchInput" placeholder="Search PC, IP, user, dept..." oninput="filterRender()" />
+    </div>
+    <select id="selStatus" onchange="filterRender()">
+      <option value="">All Status</option>
+      <option value="Online">Online</option>
+      <option value="Idle">Idle</option>
+      <option value="Offline">Offline</option>
+    </select>
+    <select id="selOs" onchange="filterRender()">
+      <option value="">All OS</option>
+      <option value="windows">Windows</option>
+      <option value="linux">Linux</option>
+      <option value="macos">macOS</option>
+    </select>
+    <select id="selDept" onchange="filterRender()">
+      <option value="">All Depts</option>
+    </select>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="count-badge" id="countBadge">0 assets</span>
+    <button class="btn btn-outline" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn btn-outline" onclick="exportJSON()">⬇ JSON</button>
+  </div>
+</div>
+
+<!-- TABLE -->
+<div class="table-wrap">
+  <div class="table-msg" id="tableMsg">
+    <span class="icon">📡</span>
+    <div class="title">Not connected</div>
+    <div>Set up your Supabase config to load asset data</div>
+  </div>
+  <table id="mainTable" style="display:none">
+    <thead>
+      <tr>
+        <th onclick="doSort('pc_name')"># PC Name ↕</th>
+        <th onclick="doSort('ip_address')">IP ↕</th>
+        <th>Status</th>
+        <th onclick="doSort('os_name')">OS ↕</th>
+        <th onclick="doSort('cpu')">CPU ↕</th>
+        <th>RAM</th>
+        <th>Disk Free</th>
+        <th>Health</th>
+        <th onclick="doSort('logged_user')">User ↕</th>
+        <th onclick="doSort('department')">Dept ↕</th>
+        <th onclick="doSort('last_seen')">Last Seen ↕</th>
+        <th>Ver</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand"><strong>Dhiran</strong> · IT Asset Inventory v2.0</div>
+  <div class="footer-stats" id="footerStats">—</div>
+  <div class="footer-stats">Auto-refresh every 60s</div>
+</footer>
+
+</div><!-- /wrap -->
+</div><!-- /dashPage -->
+
+<div id="toast"></div>
+
 <script>
-function toggleTheme(){
-  document.body.classList.toggle("light");
-  localStorage.setItem("theme",
-    document.body.classList.contains("light") ? "light" : "dark"
-  );
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+const CREDS = { username: 'admin', password: 'Admin@123' };
+const MAX_ATTEMPTS = 5;
+let attempts = 0;
+let lockUntil = 0;
+
+// Check session
+window.addEventListener('DOMContentLoaded', () => {
+  // Theme
+  const savedTheme = localStorage.getItem('dh_theme') || 'dark';
+  if (savedTheme === 'light') {
+    document.body.classList.add('light');
+    const tBtn = document.getElementById('themeToggle');
+    if (tBtn) tBtn.textContent = '🌙';
+  }
+
+  // If already logged in this session, skip login
+  if (sessionStorage.getItem('dh_auth') === '1') {
+    showDashboard();
+  } else {
+    // Focus username field
+    setTimeout(() => document.getElementById('loginUser').focus(), 300);
+  }
+
+  // Enter key on login fields
+  ['loginUser','loginPass'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') doLogin();
+    });
+  });
+});
+
+function doLogin() {
+  const now = Date.now();
+  if (now < lockUntil) {
+    const secs = Math.ceil((lockUntil - now) / 1000);
+    showLoginError(`Too many attempts. Wait ${secs}s`);
+    return;
+  }
+
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const btn  = document.getElementById('loginBtn');
+
+  // Loading state
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-spinner"></span>Authenticating...';
+
+  setTimeout(() => {
+    if (user === CREDS.username && pass === CREDS.password) {
+      attempts = 0;
+      sessionStorage.setItem('dh_auth', '1');
+      btn.innerHTML = '✓ Access Granted';
+      btn.style.background = '#4ade80';
+      btn.style.color = '#000';
+      setTimeout(() => showDashboard(), 600);
+    } else {
+      attempts++;
+      btn.disabled = false;
+      btn.innerHTML = 'Sign In';
+
+      if (attempts >= MAX_ATTEMPTS) {
+        lockUntil = Date.now() + 30000;
+        showLoginError('Account locked for 30 seconds');
+      } else {
+        const left = MAX_ATTEMPTS - attempts;
+        showLoginError(`Invalid credentials — ${left} attempt${left !== 1 ? 's' : ''} remaining`);
+        if (attempts >= 3) {
+          const warn = document.getElementById('attemptsWarn');
+          warn.textContent = `⚠ ${attempts} failed attempts`;
+          warn.classList.add('show');
+        }
+      }
+
+      // Shake the card
+      document.querySelector('.login-card').style.animation = 'none';
+      setTimeout(() => {
+        document.querySelector('.login-card').style.animation = '';
+      }, 10);
+
+      document.getElementById('loginPass').value = '';
+      document.getElementById('loginPass').focus();
+    }
+  }, 700);
 }
 
-window.onload = () => {
-  if(localStorage.getItem("theme")==="light"){
-    document.body.classList.add("light");
-  }
-};
-</script>
+function showLoginError(msg) {
+  const el = document.getElementById('loginError');
+  el.textContent = '⚠ ' + msg;
+  el.classList.remove('show');
+  void el.offsetWidth; // reflow to restart animation
+  el.classList.add('show');
+}
 
+function togglePw() {
+  const inp = document.getElementById('loginPass');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  document.getElementById('eyeBtn').textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+function showDashboard() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('dashPage').classList.add('active');
+
+  // init dashboard
+  buildUptimePlaceholder();
+  if (SB_URL && SB_KEY) {
+    document.getElementById('setupBanner').classList.add('hidden');
+    loadAssets();
+    startTimer();
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('dh_auth');
+  clearInterval(timer);
+  // Reset & show login
+  document.getElementById('dashPage').classList.remove('active');
+  document.getElementById('loginPage').style.display = '';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginBtn').innerHTML = 'Sign In';
+  document.getElementById('loginBtn').disabled = false;
+  document.getElementById('loginBtn').style.background = '';
+  document.getElementById('loginBtn').style.color = '';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('attemptsWarn').classList.remove('show');
+  attempts = 0;
+  setTimeout(() => document.getElementById('loginUser').focus(), 200);
+  toast('Logged out successfully', 'info');
+}
+
+// ════════════════════════════════════════════
+// DASHBOARD STATE
+// ════════════════════════════════════════════
+let SB_URL  = localStorage.getItem('dh_url')  || '';
+let SB_KEY  = localStorage.getItem('dh_key')  || '';
+let allData = [];
+let sortKey = 'last_seen';
+let sortAsc = false;
+let timer;
+let alertsVisible = false;
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  const tBtn = document.getElementById('themeToggle');
+  if (tBtn) tBtn.textContent = isLight ? '🌙' : '☀';
+  localStorage.setItem('dh_theme', isLight ? 'light' : 'dark');
+}
+
+function openConfig() {
+  document.getElementById('cfgUrl').value = SB_URL;
+  document.getElementById('cfgKey').value = SB_KEY;
+  document.getElementById('configOverlay').classList.remove('hidden');
+}
+function closeConfig() { document.getElementById('configOverlay').classList.add('hidden'); }
+
+function saveConfig() {
+  const u = document.getElementById('cfgUrl').value.trim();
+  const k = document.getElementById('cfgKey').value.trim();
+  if (!u || !k) { toast('Enter both URL and Key', 'error'); return; }
+  SB_URL = u; SB_KEY = k;
+  localStorage.setItem('dh_url', u);
+  localStorage.setItem('dh_key', k);
+  closeConfig();
+  document.getElementById('setupBanner').classList.add('hidden');
+  toast('Connected! Loading assets...', 'success');
+  loadAssets(); startTimer();
+}
+
+function clearConfig() {
+  localStorage.removeItem('dh_url'); localStorage.removeItem('dh_key');
+  SB_URL = ''; SB_KEY = ''; allData = [];
+  closeConfig(); setStats([]);
+  document.getElementById('insightsRow').style.display = 'none';
+  showMsg('📡', 'Not connected', 'Set up your Supabase config to load asset data');
+  toast('Config cleared', 'error');
+}
+
+document.addEventListener('click', e => {
+  const overlay = document.getElementById('configOverlay');
+  if (overlay && e.target === overlay) closeConfig();
+});
+
+function toggleAlerts() {
+  alertsVisible = !alertsVisible;
+  document.getElementById('alertPanel').style.display = alertsVisible ? 'block' : 'none';
+}
+
+async function loadAssets() {
+  if (!SB_URL || !SB_KEY) return;
+  setStatus('Syncing...'); showLoading();
+  try {
+    const res = await fetch(
+      `${SB_URL}/rest/v1/assets?select=*&order=last_seen.desc`,
+      { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' } }
+    );
+    if (!res.ok) { const txt = await res.text(); throw new Error(`${res.status} ${txt.slice(0,120)}`); }
+    allData = await res.json();
+    buildDeptFilter(allData); filterRender(); setStats(allData);
+    updateInsights(allData); buildAlerts(allData);
+    setStatus('Live');
+    document.getElementById('syncTime').textContent = 'Synced ' + new Date().toLocaleTimeString();
+    document.getElementById('insightsRow').style.display = '';
+  } catch (err) {
+    showMsg('⚠', 'Connection failed', err.message);
+    setStatus('Error');
+    toast('Could not reach Supabase — check config', 'error');
+  }
+}
+
+function startTimer() { clearInterval(timer); timer = setInterval(loadAssets, 60000); }
+
+function updateInsights(data) {
+  const now = Date.now();
+  const online  = data.filter(a => a.last_seen && (now - new Date(a.last_seen)) < 5*60*1000).length;
+  const idle    = data.filter(a => { if (!a.last_seen) return false; const d = now - new Date(a.last_seen); return d >= 5*60*1000 && d < 30*60*1000; }).length;
+  const offline = data.length - online - idle;
+  const total   = data.length || 1;
+  const circ    = 175.93;
+  const onlineArc = (online/total)*circ, idleArc = (idle/total)*circ, offlineArc = (offline/total)*circ;
+  let offset = 0;
+  const dO = document.getElementById('donut-online'), dI = document.getElementById('donut-idle'), dF = document.getElementById('donut-offline');
+  dO.setAttribute('stroke-dasharray', `${onlineArc} ${circ-onlineArc}`);
+  dO.setAttribute('transform', `rotate(${-90+offset*360/circ} 35 35)`); offset += onlineArc;
+  dI.setAttribute('stroke-dasharray', `${idleArc} ${circ-idleArc}`);
+  dI.setAttribute('transform', `rotate(${-90+offset*360/circ} 35 35)`); offset += idleArc;
+  dF.setAttribute('stroke-dasharray', `${offlineArc} ${circ-offlineArc}`);
+  dF.setAttribute('transform', `rotate(${-90+offset*360/circ} 35 35)`);
+  document.getElementById('insightTotal').textContent = data.length;
+  document.getElementById('leg-online').textContent  = `Online ${online}`;
+  document.getElementById('leg-idle').textContent    = `Idle ${idle}`;
+  document.getElementById('leg-offline').textContent = `Offline ${offline}`;
+  const win = data.filter(a => (a.os_name||'').toLowerCase().includes('windows')).length;
+  const mac = data.filter(a => (a.os_name||'').toLowerCase().includes('mac')).length;
+  const lin = data.filter(a => (a.os_name||'').toLowerCase().includes('linux')).length;
+  const maxOS = Math.max(win, mac, lin, 1);
+  document.getElementById('osBars').innerHTML = [['🪟 Windows',win],['🍎 macOS',mac],['🐧 Linux',lin]].map(([l,c]) => `
+    <div><div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:4px"><span>${l}</span><span style="color:var(--white-60)">${c}</span></div>
+    <div style="height:6px;background:var(--s3);border-radius:3px;overflow:hidden"><div style="height:100%;width:${(c/maxOS)*100}%;background:var(--white-60);border-radius:3px;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1)"></div></div></div>`).join('');
+  const slots = data.slice(0,60);
+  const bars = document.getElementById('uptimeBars'); bars.innerHTML='';
+  for (let i=0;i<60;i++) { const c=document.createElement('div'); c.className='uptime-cell'; if(i<slots.length){const s=getStatus(slots[i].last_seen); c.classList.add(s==='Online'?'up':s==='Idle'?'idle':'dn'); c.title=`${slots[i].pc_name||'?'} · ${s}`;} bars.appendChild(c); }
+}
+
+function buildAlerts(data) {
+  const alerts = [];
+  data.forEach(a => {
+    if (a.disk_free_gb && a.disk_total_gb && a.disk_free_gb/a.disk_total_gb < 0.1)
+      alerts.push({sev:'high', msg:`${a.pc_name} — Disk critically low (${a.disk_free_gb}GB free)`});
+    if (a.ram_gb && a.ram_gb < 2)
+      alerts.push({sev:'med', msg:`${a.pc_name} — Low RAM (${a.ram_gb}GB)`});
+  });
+  const offCnt = data.filter(a => getStatus(a.last_seen)==='Offline').length;
+  if (offCnt > 5) alerts.push({sev:'med', msg:`${offCnt} machines offline — check network`});
+  document.getElementById('notifDot').style.display = alerts.length ? 'block' : 'none';
+  const list = document.getElementById('alertList');
+  list.innerHTML = alerts.length
+    ? alerts.map(al => `<div class="alert-item"><span class="alert-sev ${al.sev}">${al.sev.toUpperCase()}</span>${esc(al.msg)}</div>`).join('')
+    : `<div class="alert-item" style="color:var(--muted)">✓ No active alerts</div>`;
+}
+
+function buildUptimePlaceholder() {
+  const bars = document.getElementById('uptimeBars');
+  if (!bars) return;
+  for (let i=0;i<60;i++) { const c=document.createElement('div'); c.className='uptime-cell'; bars.appendChild(c); }
+}
+
+function filterRender() {
+  const q    = document.getElementById('searchInput').value.toLowerCase();
+  const st   = document.getElementById('selStatus').value;
+  const os   = document.getElementById('selOs').value;
+  const dept = document.getElementById('selDept').value;
+  let rows = allData.filter(a => {
+    if (q && !['pc_name','ip_address','logged_user','department','cpu','mac_address'].some(k => (a[k]||'').toLowerCase().includes(q))) return false;
+    if (st && getStatus(a.last_seen) !== st) return false;
+    if (os && !(a.os_name||'').toLowerCase().includes(os)) return false;
+    if (dept && (a.department||'') !== dept) return false;
+    return true;
+  });
+  rows.sort((a,b) => { const av=String(a[sortKey]||''), bv=String(b[sortKey]||''); return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av); });
+  document.getElementById('countBadge').textContent = `${rows.length} asset${rows.length!==1?'s':''}`;
+  if (!rows.length) { showMsg('🔍','No assets match','Try adjusting your filters'); return; }
+  hideMsg();
+  document.getElementById('tbody').innerHTML = rows.map((a,i) => buildRow(a,i+1)).join('');
+  document.getElementById('mainTable').style.display = '';
+}
+
+function buildRow(a,n) {
+  const status=getStatus(a.last_seen), bCls=`badge badge-${status.toLowerCase()}`;
+  const osIcon=(a.os_name||'').toLowerCase().includes('windows')?'🪟':(a.os_name||'').toLowerCase().includes('mac')?'🍎':'🐧';
+  const ram=a.ram_gb?`${a.ram_gb} GB`:'<span class="dim">—</span>';
+  const disk=a.disk_free_gb?`${a.disk_free_gb} GB`:'<span class="dim">—</span>';
+  const dept=a.department?`<span class="dept-tag">${esc(a.department)}</span>`:'<span class="dim">—</span>';
+  let healthHtml='<span class="dim">—</span>';
+  if (a.disk_free_gb && a.disk_total_gb) { const pct=Math.round((a.disk_free_gb/a.disk_total_gb)*100),cls=pct<15?'low':pct<40?'mid':''; healthHtml=`<div class="health-bar"><div class="health-track"><div class="health-fill ${cls}" style="width:${pct}%"></div></div><span class="health-pct">${pct}%</span></div>`; }
+  return `<tr><td class="pc-name"><span class="row-num">${n}</span>${esc(a.pc_name||'—')}</td><td>${esc(a.ip_address||'—')}</td><td><span class="${bCls}"><span class="badge-dot"></span>${status}</span></td><td><span class="os-badge">${osIcon} ${esc(trunc(a.os_name,18)||'—')}</span></td><td title="${esc(a.cpu||'')}">${esc(trunc(a.cpu,24)||'—')}</td><td>${ram}</td><td>${disk}</td><td>${healthHtml}</td><td>${esc(a.logged_user||'—')}</td><td>${dept}</td><td title="${esc(a.last_seen||'')}">${fmtTime(a.last_seen)}</td><td class="dim">${esc(a.agent_version||'—')}</td></tr>`;
+}
+
+function doSort(col) { if(sortKey===col) sortAsc=!sortAsc; else{sortKey=col;sortAsc=true;} filterRender(); }
+
+function setStats(data) {
+  const now=Date.now();
+  const online=data.filter(a=>a.last_seen&&(now-new Date(a.last_seen))<5*60*1000);
+  const idle=data.filter(a=>{if(!a.last_seen)return false;const d=now-new Date(a.last_seen);return d>=5*60*1000&&d<30*60*1000;});
+  const offline=data.length-online.length-idle.length;
+  const win=data.filter(a=>(a.os_name||'').toLowerCase().includes('windows'));
+  const depts=new Set(data.map(a=>a.department).filter(Boolean));
+  document.getElementById('sTotal').textContent=data.length||'0';
+  document.getElementById('sOnline').textContent=online.length||'0';
+  document.getElementById('sIdle').textContent=idle.length||'0';
+  document.getElementById('sOffline').textContent=Math.max(0,offline)||'0';
+  document.getElementById('sWin').textContent=win.length||'0';
+  document.getElementById('sDept').textContent=depts.size||'0';
+  document.getElementById('footerStats').textContent=`${data.length} total · ${online.length} online · ${idle.length} idle · ${Math.max(0,offline)} offline`;
+}
+
+function buildDeptFilter(data) {
+  const depts=[...new Set(data.map(a=>a.department).filter(Boolean))].sort();
+  const sel=document.getElementById('selDept'), cur=sel.value;
+  sel.innerHTML='<option value="">All Depts</option>'+depts.map(d=>`<option value="${esc(d)}"${d===cur?' selected':''}>${esc(d)}</option>`).join('');
+}
+
+function exportCSV() {
+  if(!allData.length){toast('No data to export','error');return;}
+  const cols=['pc_name','ip_address','mac_address','os_name','cpu','ram_gb','disk_free_gb','disk_total_gb','logged_user','department','last_seen','agent_version'];
+  const blob=new Blob([[cols.join(','),...allData.map(a=>cols.map(c=>`"${String(a[c]||'').replace(/"/g,'""')}"`).join(','))].join('\n')],{type:'text/csv'});
+  const el=document.createElement('a'); el.href=URL.createObjectURL(blob); el.download=`dhiran_assets_${new Date().toISOString().slice(0,10)}.csv`; el.click();
+  toast('CSV exported ✓','success');
+}
+
+function exportJSON() {
+  if(!allData.length){toast('No data to export','error');return;}
+  const blob=new Blob([JSON.stringify(allData,null,2)],{type:'application/json'});
+  const el=document.createElement('a'); el.href=URL.createObjectURL(blob); el.download=`dhiran_assets_${new Date().toISOString().slice(0,10)}.json`; el.click();
+  toast('JSON exported ✓','success');
+}
+
+function showLoading() {
+  document.getElementById('mainTable').style.display='none';
+  document.getElementById('tableMsg').innerHTML=`<div style="padding:50px;text-align:center;color:var(--muted);font-family:var(--mono);font-size:12px"><span class="spinner"></span>Loading assets from Supabase...</div>`;
+  document.getElementById('tableMsg').style.display='block';
+}
+function showMsg(icon,title,sub) {
+  document.getElementById('mainTable').style.display='none';
+  document.getElementById('tableMsg').innerHTML=`<div class="table-msg"><span class="icon">${icon}</span><div class="title">${title}</div><div>${sub}</div></div>`;
+  document.getElementById('tableMsg').style.display='block';
+}
+function hideMsg() { document.getElementById('tableMsg').style.display='none'; document.getElementById('mainTable').style.display=''; }
+function setStatus(s) { document.getElementById('syncStatus').textContent=s; }
+
+function toast(msg,type='info') {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.className=`show ${type}`;
+  clearTimeout(el._t); el._t=setTimeout(()=>el.className='',3000);
+}
+
+function getStatus(ts) {
+  if(!ts) return 'Offline';
+  const d=Date.now()-new Date(ts).getTime();
+  if(d<5*60*1000) return 'Online';
+  if(d<30*60*1000) return 'Idle';
+  return 'Offline';
+}
+function fmtTime(ts) {
+  if(!ts) return '<span class="dim">—</span>';
+  const d=Date.now()-new Date(ts).getTime();
+  if(d<60000) return 'just now';
+  if(d<3600000) return `${Math.floor(d/60000)}m ago`;
+  if(d<86400000) return `${Math.floor(d/3600000)}h ago`;
+  return new Date(ts).toLocaleDateString();
+}
+function trunc(s,n) { if(!s) return s; return s.length>n?s.slice(0,n)+'…':s; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.addEventListener('keydown', e => {
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault(); const si=document.getElementById('searchInput'); if(si) si.focus();}
+  if(e.key==='Escape'){closeConfig(); const c=document.getElementById('configOverlay'); if(c) c.classList.add('hidden');}
+});
+</script>
 </body>
 </html>
